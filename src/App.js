@@ -1,23 +1,35 @@
-import logo from './logo.svg';
 import './App.css';
+import axios from 'axios';
+import About from './pages/About'
+import Index from './pages/Index'
+import Expensive from './pages/Expensive.jsx'
+import Header from './components/Header'
+import { BrowserRouter,Routes,Route } from 'react-router-dom';
+import { useState,useEffect } from 'react';
 
 function App() {
+  const [product,setProducts]=useState([])
+  useEffect(() =>{
+    const getProds= async () =>{
+
+     await axios
+      .get('https://fakestoreapi.com/products')
+      .then((res) => setProducts(res.data))
+      .catch((err) => console.log(err));
+      
+    }
+      getProds();
+  },[])
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BrowserRouter>
+      <Header/>
+      <Routes>
+        <Route path='/' element={<Index products={product}/>}/>
+        <Route path='/about' element={<About/>}/>
+        <Route path='/exp' element={<Expensive products={product}/>}/>
+      </Routes>
+      </BrowserRouter>
     </div>
   );
 }
